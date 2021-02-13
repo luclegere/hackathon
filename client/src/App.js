@@ -1,77 +1,86 @@
 import React, { Component } from 'react';
-
 import logo from './logo.svg';
-
+import config from "./firebaseConfig";
+import 'firebase/auth';
+import firebase from 'firebase/app';
 import './App.css';
+import withFirebaseAuth from 'react-with-firebase-auth'
+import 'firebase/firestore';
 
-class App extends Component {
+var firebaseApp;
+if (!firebase.apps.length) {
+   firebaseApp = firebase.initializeApp(config);
+}
+else {
+   firebaseApp = firebase.app(); // if already initialized, use that one
+}
+const firestore = firebase.firestore();
+const firebaseAppAuth = firebaseApp.auth();
+const providers = {
+  googleProvider: new firebase.auth.GoogleAuthProvider()
+};
+
+class App extends React.Component {
+  
   state = {
-    response: '',
-    post: '',
-    responseToPost: '',
-  };
-  
-  componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
-  }
-  
-  callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    
-    return body;
-  };
-  
-  handleSubmit = async e => {
-    e.preventDefault();
-    const response = await fetch('/api/world', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ post: this.state.post }),
-    });
-    const body = await response.text();
-    
-    this.setState({ responseToPost: body });
-  };
-  
-render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-        <p>{this.state.response}</p>
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>Post to Server:</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
-          />
-          <button type="submit">Submit</button>
-        </form>
-        <p>{this.state.responseToPost}</p>
-      </div>
-    );
-  }
+		title: "",
+	};
+
+updateInput = event => {
+  this.setState({ [event.target.name]: event.target.value })
 }
 
-export default App;
+addTask = event => {
+	event.preventDefault()
+
+	firestore.collection("tasks").add({
+		title: this.state.title
+	})
+	this.setState({ title: ""})
+}
+
+render() {
+  const { title } = this.state
+  const {
+    user,
+    signOut,
+    signInWithGoogle,
+  } = this.props;
+  return (
+
+    <div className='App'>
+      <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          {
+            user 
+              ? <p>Hello, {user.displayName}</p>
+              : <p>Please sign in.</p>
+          }
+          {
+            user
+              ? <button onClick={signOut}>Sign out</button>
+              : <button onClick={signInWithGoogle}>Sign in with Google</button>
+          }
+        </header>
+              <p> Create a new task!</p>
+              <form onSubmit={this.addTask}>
+              <input
+                  type='text'
+                  placeholder='Title'
+                  name='title'
+                  onChange={this.updateInput}
+                  value={title}
+              />
+          <br />
+            
+              <button type='submit'>Submit</button>
+          </form>
+      </div>
+  )
+}
+}
+
+export default withFirebaseAuth({
+  providers,
+  firebaseAppAuth,
+})(App);  
