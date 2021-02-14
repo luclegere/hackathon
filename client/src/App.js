@@ -241,7 +241,6 @@ import 'firebase/auth';
 import firebase from 'firebase/app';
 import './App.css';
 import 'firebase/firestore';
-import Signup from "./components/Signup";
 import Login from "./components/Login";
 import React from 'react';
 import withFirebaseAuth from './components/Login';
@@ -257,9 +256,6 @@ export function Main() {
         <Switch>
           <Route path="/Login" exact>
             <Login />
-          </Route>
-          <Route path="/Signup" exact>
-            <Signup />
           </Route>
           <Route path="/" exact>
             <SimpleGrid columns={2} spacing={10}>
