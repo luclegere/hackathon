@@ -71,7 +71,7 @@ export default () => {
                   </Link>
                 </Box>
                 <Box>
-                  <Link to="/desstress" onClick={onClose}>
+                  <Link to="/destress" onClick={onClose}>
                     De-stress
                   </Link>
                 </Box>
