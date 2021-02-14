@@ -70,6 +70,11 @@ export default () => {
                     Sticky Notes
                   </Link>
                 </Box>
+                <Box>
+                  <Link to="/desstress" onClick={onClose}>
+                    De-stress
+                  </Link>
+                </Box>
               </VStack>
             </DrawerBody>
           </DrawerContent>

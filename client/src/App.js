@@ -239,6 +239,7 @@ import Projects from "./components/Projects";
 import TaskGraph from "./components/TaskGraph";
 import Calender from "./components/Calender";
 import StickyNotes from "./components/StickyNotes";
+import Destress from "./components/Destress";
 import config from "./firebaseConfig";
 import 'firebase/auth';
 import firebase from 'firebase/app';
@@ -284,6 +285,9 @@ export function Main() {
           </Route>
           <Route path="/stickyNotes" exact>
             <StickyNotes />
+          </Route>
+          <Route path="/destress" exact>
+            <Destress/>
           </Route>
         </Switch>
       </Router>
