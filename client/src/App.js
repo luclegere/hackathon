@@ -236,6 +236,9 @@ import NavBar from "./components/NavBar";
 import Timeline from "./components/Timeline";
 import Incentives from "./components/Incentives";
 import Projects from "./components/Projects";
+import TaskGraph from "./components/TaskGraph";
+import Calender from "./components/Calender";
+import StickyNotes from "./components/StickyNotes";
 import config from "./firebaseConfig";
 import 'firebase/auth';
 import firebase from 'firebase/app';
@@ -245,6 +248,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import React from 'react';
 import withFirebaseAuth from './components/Login';
+
 
 
 
@@ -275,6 +279,15 @@ export function Main() {
           </Route>
           <Route path="/projects" exact>
             <Projects />
+          </Route>
+          <Route path="/taskgraph" exact>
+            <TaskGraph />
+          </Route>
+          <Route path="/calender" exact>
+            <Calender />
+          </Route>
+          <Route path="/stickyNotes" exact>
+            <StickyNotes />
           </Route>
         </Switch>
       </Router>

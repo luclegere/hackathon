@@ -55,6 +55,21 @@ export default () => {
                     Incentives
                   </Link>
                 </Box>
+                <Box>
+                  <Link to="/taskGraph" onClick={onClose}>
+                    Task Graph
+                  </Link>
+                </Box>
+                <Box>
+                  <Link to="/calender" onClick={onClose}>
+                    Calender
+                  </Link>
+                </Box>
+                <Box>
+                  <Link to="/stickyNotes" onClick={onClose}>
+                    Sticky Notes
+                  </Link>
+                </Box>
               </VStack>
             </DrawerBody>
           </DrawerContent>
