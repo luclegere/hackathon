@@ -40,6 +40,7 @@ export default () => {
 
   let [incentives, setIncentives] = React.useState(incentivelist); // data in state
   incentivelist = [];
+
   const fetchIncentives = async() => {
     const response = firestore.collection('projects');
     const data = await response.get();
@@ -64,7 +65,7 @@ export default () => {
       <Box></Box>
       <Box>
         <Stack spacing={2}>
-          {incentives.map((item) => (
+          {incentivelist.map((item) => (
             <IncentiveItem
               title={item.name}
               desc={item.desc}
@@ -142,20 +143,33 @@ function IncentiveItem({ title, desc, incentives, setIncentives, ...rest }) {
 
 
 class AddButton extends React.Component {
-    addTask = (name, desc) => event => {
+    
+    state = {
+        name:"",
+        desc:"",
+        uid:""
+    };
+
+    updateInput = event => {
+        this.setState({ [event.target.name]: event.target.value} )
+    }
+
+    addIncentive = event => {
         event.preventDefault()
-        firestore.collection("tasks").add({
-            title: name,
-            desc: desc,
-     
+        firestore.collection("incentives").add({
+            name: this.state.name,
+            desc: this.state.desc,
+            uid: this.state.uid
+            
         })
-        this.setState({ title: "", desc: "", priority: ""})
+        this.setState({ name: "", desc: ""})
         console.log('added');
     }
 
     //get all tasks from database (from all users) and print to console
-    getTasks = event => {
+    getIncentives = event => {
         event.preventDefault();
+        incentivelist = [];
         firestore.collection("incentives").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 incentivelist.push({name: doc.data().name, desc: doc.data().desc})
@@ -166,10 +180,35 @@ class AddButton extends React.Component {
     }
 
     render() {
+
+        if (firebase.auth().currentUser) {
+            let id = firebase.auth().currentUser.uid;
+            this.state.uid = id;
+        }
+        const {
+            name, desc, uid
+        } = this.state;
         return (
             <div>
+            <form onSubmit={this.addIncentive}>
+              <input
+                type='text'
+                placeholder='name of incentive'
+                name='name'
+                onChange={this.updateInput}
+                value={name}
+               />
+              <input
+                type='text'
+                placeholder='incentive description'
+                name='desc'
+                onChange={this.updateInput}
+                value={desc}
+               />
+              
               {" "}
-              <IconButton m={2} p={2} aria-label="Search database" icon={<AddIcon />} onClick={this.getTasks } />
+              <IconButton m={2} p={2} arias-label="Search database" icon={<AddIcon />} type="submit"/>
+            </form>
             </div>
           );
         }
