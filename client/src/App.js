@@ -1,18 +1,15 @@
-import {
-  ChakraProvider,
-  SimpleGrid,
-  Box,
-  useColorMode,
-  Button,
-} from "@chakra-ui/react";
+import { ChakraProvider, SimpleGrid, Box } from "@chakra-ui/react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import NavBar from "./components/NavBar";
 import Timeline from "./components/Timeline";
 import Incentives from "./components/Incentives";
 import Projects from "./components/Projects";
+import Calendar from "./components/Calendar";
 
 import theme from "./theme";
+import Destress from "./components/Destress";
+import StickyNotes from "./components/StickyNotes";
 
 export function Main() {
   return (
@@ -36,6 +33,15 @@ export function Main() {
           </Route>
           <Route path="/projects" exact>
             <Projects />
+          </Route>
+          <Route path="/calendar" exact>
+            <Calendar />
+          </Route>
+          <Route path="/destress" exact>
+            <Destress />
+          </Route>
+          <Route path="/stickynotes" exact>
+            <StickyNotes />
           </Route>
         </Switch>
       </Router>
