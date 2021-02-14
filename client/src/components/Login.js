@@ -4,7 +4,8 @@ import firebase from 'firebase';
 import withFirebaseAuth from 'react-with-firebase-auth'
 import 'firebase/firestore';
 import config from "../firebaseConfig";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import googleLogo from '../btn_google_signin_light_normal_web.png';
 require('firebase/auth')
 
 
@@ -52,8 +53,8 @@ class Login extends React.Component {
         <div> 
         { 
         user 
-            ? <button onClick={signOut}>Sign out</button>
-            :   <button onClick={signInWithGoogle}> Sign in with Google </button> 
+            ?   <Redirect to="/"/>
+            :   <img src={googleLogo} style={{margin:'auto'}} onClick={signInWithGoogle} alt="Sign in with Google" /> 
         }
         </div>
         

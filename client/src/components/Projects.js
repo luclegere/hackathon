@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -138,24 +138,71 @@ export default () => {
 
 
 class AddButton extends React.Component {
-    addProject = (title, desc, priority) => event => {
+
+    state = {
+        title: "",
+        desc: "",
+        progress:"0",
+        priority:"",
+        uid:""
+    };
+
+    updateInput = event => {
+        this.setState({ [event.target.name]: event.target.value} )
+    }
+
+    addProject = event => {
         event.preventDefault()
         firestore.collection("projects").add({
-            title: title,
-            desc: desc,
+            title: this.state.title,
+            desc: this.state.desc,
             progress: 0,
-            priority: priority,
-            uid: id
+            priority: this.state.priority,
+            uid: this.state.uid
         })
-        
+        this.setState({title: "", desc: "", priority:""})
         console.log('added');
     }
     
     render() {
+        if (firebase.auth().currentUser) {
+            let id = firebase.auth().currentUser.uid;
+            this.state.uid = id;
+        }
+        const {
+            title, desc, progress, priority, uid
+        } = this.state;
+
+
         return (
             <div>
+            <form onSubmit={this.addProject}>
+                <input
+                    type='text'
+                    placeholder='name of project'
+                    name='title'
+                    onChange={this.updateInput}
+                    value={title}
+                />
+                <input
+                    type='text'
+                    placeholder='project description'
+                    name='desc'
+                    onChange={this.updateInput}
+                    value={desc}
+                />
+                <input
+                    type='text'
+                    placeholder='project priority (1-5)'
+                    name='priority'
+                    onChange={this.updateInput}
+                    value={priority}
+                />
+              
+
               {" "}
-              <IconButton m={2} p={2} aria-label="Search database" icon={<AddIcon/>} onClick={this.addProject('new project', 'this project is epic', 2) } />
+              <IconButton m={2} p={2} arias-label="Search database" icon={<AddIcon />} type="submit"/>
+            </form>
             </div>
           );
         }   
@@ -200,7 +247,13 @@ function Preview({ title, desc, progress, priority, dataArray, setDataArray }) {
                     const filteredPeople = dataArray.filter(
                       (item) => item.title !== title
                     );
+
+
                     setDataArray(filteredPeople);
+                    //TODO: 
+                    //Find how to get selected item name
+                    //DeleteProject(project name);
+
                     onClose();
                   }}
                   ml={3}
@@ -227,6 +280,18 @@ function Preview({ title, desc, progress, priority, dataArray, setDataArray }) {
   );
 
         
-  
+  function DeleteProject(name) {
+    const del = () => {
+        const response = firestore.collection('projects');
+        const data =  response.where('title', '==', name);
+        data.get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            doc.ref.delete();
+          });
+        });
+    }
+    del();
+}
+
 
 }
