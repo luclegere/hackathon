@@ -7,7 +7,15 @@ import './App.css';
 import withFirebaseAuth from 'react-with-firebase-auth'
 import 'firebase/firestore';
 
+
+var tasks = [];
 var firebaseApp;
+
+
+
+
+
+
 if (!firebase.apps.length) {
    firebaseApp = firebase.initializeApp(config);
 }
@@ -16,6 +24,8 @@ else {
 }
 const firestore = firebase.firestore();
 const firebaseAppAuth = firebaseApp.auth();
+const usersDB = firestore.collection('users');
+
 const providers = {
   googleProvider: new firebase.auth.GoogleAuthProvider()
 };
@@ -26,17 +36,40 @@ class App extends React.Component {
 		title: "",
 	};
 
-updateInput = event => {
-  this.setState({ [event.target.name]: event.target.value })
-}
+  updateInput = event => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
 
+
+//add a task to the database
 addTask = event => {
 	event.preventDefault()
-
 	firestore.collection("tasks").add({
 		title: this.state.title
 	})
 	this.setState({ title: ""})
+  console.log('added');
+}
+
+//get all tasks from database and print to console
+getTasks = event => {
+  event.preventDefault();
+  firestore.collection("tasks").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data().title);
+    })
+  })
+}
+
+//Delete task from database by title
+deleteTask = event => {
+  event.preventDefault();
+  var tasktodelete = firestore.collection('tasks').where('title','==',this.state.title);
+  tasktodelete.get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+      doc.ref.delete();
+    });
+  });
 }
 
 render() {
@@ -64,20 +97,25 @@ render() {
         </header>
               <p> Create a new task!</p>
               <form onSubmit={this.addTask}>
-              <input
-                  type='text'
-                  placeholder='Title'
-                  name='title'
-                  onChange={this.updateInput}
-                  value={title}
-              />
-          <br />
-            
-              <button type='submit'>Submit</button>
-          </form>
+                <input
+                    type='text'
+                    placeholder='Title'
+                    name='title'
+                    onChange={this.updateInput}
+                    value={title}
+                />
+                <br/>
+                <button type='submit'>Add Task</button>
+              </form>
+              <form onSubmit={this.deleteTask}>
+                <button type='submit'>Delete Task</button>
+              </form>
+              <form onSubmit={this.getTasks}>
+                <button type='submit'> Get Tasks from database </button>
+              </form>
       </div>
   )
-}
+  }
 }
 
 export default withFirebaseAuth({
