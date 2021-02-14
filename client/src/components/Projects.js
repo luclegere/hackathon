@@ -136,6 +136,7 @@ export default () => {
   );
 };
 
+
 class AddButton extends React.Component {
 
     state = {
@@ -246,7 +247,13 @@ function Preview({ title, desc, progress, priority, dataArray, setDataArray }) {
                     const filteredPeople = dataArray.filter(
                       (item) => item.title !== title
                     );
+
+
                     setDataArray(filteredPeople);
+                    //TODO: 
+                    //Find how to get selected item name
+                    //DeleteProject(project name);
+
                     onClose();
                   }}
                   ml={3}
@@ -273,6 +280,18 @@ function Preview({ title, desc, progress, priority, dataArray, setDataArray }) {
   );
 
         
-  
+  function DeleteProject(name) {
+    const del = () => {
+        const response = firestore.collection('projects');
+        const data =  response.where('title', '==', name);
+        data.get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            doc.ref.delete();
+          });
+        });
+    }
+    del();
+}
+
 
 }

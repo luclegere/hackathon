@@ -16,12 +16,11 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { DeleteIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
-
 import { incentive } from "../Data"; // data
-
 import 'firebase/firestore';
 import firebase from 'firebase';
 import config from "../firebaseConfig";
+import Data from "../Data";
 var firebaseApp;
 if (!firebase.apps.length) {
     firebaseApp = firebase.initializeApp(config);
@@ -38,7 +37,7 @@ var incentivelist = [];
 export default () => {
 
 
-  let [incentives, setIncentives] = React.useState(incentivelist); // data in state
+  let [incentives, setIncentives] = React.useState(Data); // data in state
   incentivelist = [];
 
   const fetchIncentives = async() => {
@@ -65,7 +64,7 @@ export default () => {
       <Box></Box>
       <Box>
         <Stack spacing={2}>
-          {incentivelist.map((item) => (
+          {incentives.map((item) => (
             <IncentiveItem
               title={item.name}
               desc={item.desc}
@@ -120,7 +119,11 @@ function IncentiveItem({ title, desc, incentives, setIncentives, ...rest }) {
                     const filteredPeople = incentives.filter(
                       (item) => item.name !== title
                     );
+                    var name;
                     setIncentives(filteredPeople);
+                    //TODO: 
+                    //Find how to get selected item name
+                  //  DeleteIncentive(item name)
                     onClose();
                   }}
                   ml={3}
@@ -140,6 +143,18 @@ function IncentiveItem({ title, desc, incentives, setIncentives, ...rest }) {
   );
 }
 
+function DeleteIncentive(name) {
+    const del = () => {
+        const response = firestore.collection('incentives');
+        const data =  response.where('name', '==', name);
+        data.get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            doc.ref.delete();
+          });
+        });
+    }
+    del();
+}
 
 
 class AddButton extends React.Component {
