@@ -18,6 +18,7 @@ import Data from "../Data";
 import PomSession from "./PomSession";
 
 export default () => {
+  let [data, setData] = React.useState(Data);
   let [preview, setPreview] = React.useState(false);
   let [previewTag, setPreviewTag] = React.useState(null);
   return (
@@ -29,13 +30,15 @@ export default () => {
       <br />
       <Grid templateColumns="repeat(2, 1fr)" gap={700} m={2} p={2}>
         <Grid templateColumns="repeat(1, 1fr)" gap={4} m={2} p={2}>
-          {Data.map((item) => {
+          {data.map((item) => {
             return (
               <PomPrompt
                 title={item.title}
                 desc={item.desc}
                 progress={item.progress}
                 priority={item.priority}
+                pomodoroTimeDone={item.pomodoroTimeDone}
+                pomodoroSessionsDone={item.pomodoroSessionsDone}
                 setPreview={setPreview}
                 setPreviewTag={setPreviewTag}
               />
@@ -84,11 +87,13 @@ function PomPrompt(props) {
               <HStack spacing={20}>
                 <Box>
                   <StatLabel>Hours Done</StatLabel>
-                  <StatNumber>9.00</StatNumber>{" "}
+                  <StatNumber>{props.pomodoroTimeDone} Hours</StatNumber>{" "}
                 </Box>{" "}
                 <Box>
-                  <StatLabel>Hours Left</StatLabel>
-                  <StatNumber>9.00</StatNumber>{" "}
+                  <StatLabel>Sessions Done</StatLabel>
+                  <StatNumber>
+                    {props.pomodoroSessionsDone} Sessions{" "}
+                  </StatNumber>{" "}
                 </Box>{" "}
               </HStack>{" "}
               <StatHelpText>Feb 12 - Feb 28</StatHelpText>

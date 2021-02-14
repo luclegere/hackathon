@@ -1,10 +1,18 @@
-import { ChakraProvider, SimpleGrid, Box } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  SimpleGrid,
+  Box,
+  useColorMode,
+  Button,
+} from "@chakra-ui/react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import NavBar from "./components/NavBar";
 import Timeline from "./components/Timeline";
 import Incentives from "./components/Incentives";
 import Projects from "./components/Projects";
+
+import theme from "./theme";
 
 export function Main() {
   return (
@@ -37,7 +45,7 @@ export function Main() {
 
 export default function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Main />
     </ChakraProvider>
   );

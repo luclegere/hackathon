@@ -5,9 +5,19 @@ import {
   Spacer,
   Box,
   Input,
+  useColorMode,
+  Button,
 } from "@chakra-ui/react";
-import { SearchIcon, EmailIcon, SettingsIcon } from "@chakra-ui/icons";
+import {
+  SearchIcon,
+  EmailIcon,
+  SettingsIcon,
+  MoonIcon,
+  SunIcon,
+} from "@chakra-ui/icons";
+import SearchField from "react-search-field";
 
+import Data from "../Data";
 import Drawer from "./Drawer";
 import NotificationBar from "./NotificationBar";
 export default () => {
@@ -36,8 +46,18 @@ export default () => {
           icon={<SettingsIcon />}
           m={2}
         />
+        <ToggleDark />
       </Flex>
       <Flex></Flex>
     </>
   );
 };
+
+function ToggleDark() {
+  const { colorMode, toggleColorMode } = useColorMode();
+  return (
+    <Button onClick={toggleColorMode} m={2}>
+      {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+    </Button>
+  );
+}

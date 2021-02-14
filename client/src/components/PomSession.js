@@ -17,30 +17,33 @@ import {
 
 export default function PomSession(props) {
   let [playing, setPlaying] = React.useState(false);
+  let [rest, setRest] = React.useState(false);
   let [data, setData] = React.useState([25, 5, 30, 4]);
-  let [key, setKey] = React.useState([25, 5, 30, 4]);
-  console.log(data[0]);
-  console.log(props);
+
   return (
     <Container>
       <Heading>{props.lol}</Heading> <br />
       <CountdownCircleTimer
-        isPlaying={playing}
-        duration={data[0] * 60}
-        key={data[0] * 60}
+        isPlaying={data[3] > 0 && playing}
+        duration={rest ? data[1] * 60 : data[0] * 60}
+        key={rest ? data[1] * 60 : data[0] * 60}
         colors={[
           ["#004777", 0.33],
           ["#F7B801", 0.33],
           ["#A30000", 0.33],
         ]}
         onComplete={() => {
-          return [true, data[1] * 60 * 1000];
+          setRest(!rest);
+          if (!rest) {
+            setData(data[3] - 1);
+          }
         }}
       >
         {({ remainingTime }) => {
           if (remainingTime >= 60) {
             return (
               <Text>
+                {rest ? "Rest Time!" : null} <br />
                 {Math.round(remainingTime / 60)} <br />
                 {Math.round(remainingTime / 60) == 1 ? "Minute" : "Minutes"}
               </Text>
